@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'providers/productivity_provider.dart';
 import 'screens/focus_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/statistics_screen.dart';
@@ -7,7 +9,12 @@ import 'screens/tasks_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() {
-  runApp(const CodeFluxApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (_) => ProductivityProvider(),
+      child: const CodeFluxApp(),
+    ),
+  );
 }
 
 class CodeFluxApp extends StatelessWidget {
@@ -16,7 +23,7 @@ class CodeFluxApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'CodeFlux — Developer Productivity',
+      title: 'CodeFlux',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
