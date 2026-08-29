@@ -34,6 +34,108 @@ class ProductivityProvider extends ChangeNotifier {
 
   int get completedSessionCount => _codingSessions.length;
 
+  int get totalCodingMinutes {
+    return _codingSessions.fold(
+      0,
+      (total, session) => total + session.durationMinutes,
+    );
+  }
+
+  int get todayCodingMinutes {
+    final now = DateTime.now();
+
+    return _codingSessions
+        .where(
+          (session) =>
+              session.startTime.year == now.year &&
+              session.startTime.month == now.month &&
+              session.startTime.day == now.day,
+        )
+        .fold(
+          0,
+          (total, session) => total + session.durationMinutes,
+        );
+  }
+
+  int get weeklyCodingMinutes {
+    final now = DateTime.now();
+
+    final weekStart = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    ).subtract(
+      const Duration(days: 6),
+    );
+
+    return _codingSessions
+        .where(
+          (session) => !session.startTime.isBefore(weekStart),
+        )
+        .fold(
+          0,
+          (total, session) => total + session.durationMinutes,
+        );
+  }
+
+  double get averageDailyCodingMinutes {
+    if (_codingSessions.isEmpty) {
+      return 0;
+    }
+
+    return weeklyCodingMinutes / 7;
+  }
+
+  int get currentStreak {
+    if (_codingSessions.isEmpty) {
+      return 0;
+    }
+
+    final uniqueDays = <DateTime>{};
+
+    for (final session in _codingSessions) {
+      final date = DateTime(
+        session.startTime.year,
+        session.startTime.month,
+        session.startTime.day,
+      );
+
+      uniqueDays.add(date);
+    }
+
+    final today = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      DateTime.now().day,
+    );
+
+    int streak = 0;
+    DateTime currentDay = today;
+
+    while (uniqueDays.contains(currentDay)) {
+      streak++;
+      currentDay = currentDay.subtract(
+        const Duration(days: 1),
+      );
+    }
+
+    return streak;
+  }
+
+  int getCodingMinutesForDay(DateTime day) {
+    return _codingSessions
+        .where(
+          (session) =>
+              session.startTime.year == day.year &&
+              session.startTime.month == day.month &&
+              session.startTime.day == day.day,
+        )
+        .fold(
+          0,
+          (total, session) => total + session.durationMinutes,
+        );
+  }
+
   void addTask(String title) {
     final trimmedTitle = title.trim();
 

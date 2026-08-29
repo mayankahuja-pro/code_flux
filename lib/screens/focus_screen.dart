@@ -14,6 +14,7 @@ class FocusScreen extends StatefulWidget {
 
 class _FocusScreenState extends State<FocusScreen> {
   static const int _initialSeconds = 25 * 60;
+  // static const int _initialSeconds = 10;
 
   Timer? _timer;
 
