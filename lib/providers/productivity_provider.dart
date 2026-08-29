@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 
+import '../models/coding_session.dart';
 import '../models/task.dart';
 
 class ProductivityProvider extends ChangeNotifier {
@@ -24,7 +25,14 @@ class ProductivityProvider extends ChangeNotifier {
     ),
   ];
 
+  final List<CodingSession> _codingSessions = [];
+
   List<Task> get tasks => List.unmodifiable(_tasks);
+
+  List<CodingSession> get codingSessions =>
+      List.unmodifiable(_codingSessions);
+
+  int get completedSessionCount => _codingSessions.length;
 
   void addTask(String title) {
     final trimmedTitle = title.trim();
@@ -70,6 +78,23 @@ class ProductivityProvider extends ChangeNotifier {
     _tasks.removeWhere(
       (task) => task.id == id,
     );
+
+    notifyListeners();
+  }
+
+  void addCodingSession({
+    required DateTime startTime,
+    required DateTime endTime,
+    required int durationMinutes,
+  }) {
+    final session = CodingSession(
+      id: DateTime.now().microsecondsSinceEpoch.toString(),
+      startTime: startTime,
+      endTime: endTime,
+      durationMinutes: durationMinutes,
+    );
+
+    _codingSessions.add(session);
 
     notifyListeners();
   }
