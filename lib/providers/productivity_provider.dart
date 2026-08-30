@@ -94,6 +94,8 @@ class ProductivityProvider extends ChangeNotifier {
       );
     }
 
+    
+
     DateTime currentDay = DateTime(
       DateTime.now().year,
       DateTime.now().month,
@@ -112,6 +114,18 @@ class ProductivityProvider extends ChangeNotifier {
 
     return streak;
   }
+
+  int get productivityScore {
+  final minutes = todayCodingMinutes;
+
+  if (minutes == 0) {
+    return 0;
+  }
+
+  final score = (minutes / 180 * 100).round();
+
+  return score.clamp(0, 100);
+}
 
   int getCodingMinutesForDay(DateTime day) {
     return _codingSessions

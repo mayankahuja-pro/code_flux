@@ -81,9 +81,9 @@ class HomeScreen extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 12),
-                  const StatCard(
+                  StatCard(
                     title: 'Productivity Score',
-                    value: '87%',
+                    value: '${provider.productivityScore}%',
                     icon: Icons.trending_up,
                     subtitle: 'Great work! Keep it up.',
                   ),
