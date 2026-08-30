@@ -11,7 +11,7 @@ import 'theme/app_theme.dart';
 void main() {
   runApp(
     ChangeNotifierProvider(
-      create: (_) => ProductivityProvider(),
+      create: (_) => ProductivityProvider()..loadData(),
       child: const CodeFluxApp(),
     ),
   );
