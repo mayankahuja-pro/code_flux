@@ -11,6 +11,11 @@ class StatisticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ProductivityProvider>();
+    if (provider.isLoading) {
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
 
     final dailyMinutes = List.generate(
       7,

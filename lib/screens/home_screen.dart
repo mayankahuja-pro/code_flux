@@ -14,6 +14,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<ProductivityProvider>();
+
+    if (provider.isLoading) {
+    return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
     final tasks = provider.tasks;
 
     final today = DateFormat('EEEE, d MMMM').format(DateTime.now());
@@ -47,8 +53,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                   ),
                   const SizedBox(height: 12),
-                  const CodingStreak(
-                    streak: AppConstants.mockStreak,
+                  CodingStreak(
+                    streak: provider.currentStreak,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -57,7 +63,7 @@ class HomeScreen extends StatelessWidget {
                         child: StatCard(
                           title: "Today's Coding",
                           value: _formatMinutes(
-                            AppConstants.mockTodayMinutes,
+                            provider.todayCodingMinutes,
                           ),
                           icon: Icons.code,
                         ),
@@ -67,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                         child: StatCard(
                           title: 'Weekly',
                           value: _formatMinutes(
-                            AppConstants.mockWeeklyMinutes,
+                            provider.weeklyCodingMinutes,
                           ),
                           icon: Icons.calendar_month,
                         ),
