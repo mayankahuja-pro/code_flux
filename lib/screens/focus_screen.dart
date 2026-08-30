@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import '../utils/constants.dart';
 import '../providers/productivity_provider.dart';
 
 class FocusScreen extends StatefulWidget {
@@ -14,7 +14,9 @@ class FocusScreen extends StatefulWidget {
 
 class _FocusScreenState extends State<FocusScreen> {
   // static const int _initialSeconds = 25 * 60;
-  static const int _initialSeconds = 5;
+  // static const int _initialSeconds = 5;
+  static const int _initialSeconds =
+    AppConstants.focusDurationMinutes * 60;
 
   Timer? _timer;
 
