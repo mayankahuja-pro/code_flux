@@ -2,37 +2,28 @@ import 'package:flutter/foundation.dart';
 
 import '../models/coding_session.dart';
 import '../models/task.dart';
+import '../services/storage_service.dart';
 
 class ProductivityProvider extends ChangeNotifier {
-  final List<Task> _tasks = [
-    Task(
-      id: '1',
-      title: 'Fix login API',
-      isCompleted: true,
-      createdAt: DateTime.now(),
-    ),
-    Task(
-      id: '2',
-      title: 'Create profile screen',
-      isCompleted: false,
-      createdAt: DateTime.now(),
-    ),
-    Task(
-      id: '3',
-      title: 'Write unit tests',
-      isCompleted: false,
-      createdAt: DateTime.now(),
-    ),
-  ];
+  final StorageService _storageService = StorageService();
 
+  final List<Task> _tasks = [];
   final List<CodingSession> _codingSessions = [];
+
+  bool _isLoading = true;
 
   List<Task> get tasks => List.unmodifiable(_tasks);
 
   List<CodingSession> get codingSessions =>
       List.unmodifiable(_codingSessions);
 
+  bool get isLoading => _isLoading;
+
   int get completedSessionCount => _codingSessions.length;
+
+  int get completedTaskCount {
+    return _tasks.where((task) => task.isCompleted).length;
+  }
 
   int get totalCodingMinutes {
     return _codingSessions.fold(
@@ -94,26 +85,26 @@ class ProductivityProvider extends ChangeNotifier {
     final uniqueDays = <DateTime>{};
 
     for (final session in _codingSessions) {
-      final date = DateTime(
-        session.startTime.year,
-        session.startTime.month,
-        session.startTime.day,
+      uniqueDays.add(
+        DateTime(
+          session.startTime.year,
+          session.startTime.month,
+          session.startTime.day,
+        ),
       );
-
-      uniqueDays.add(date);
     }
 
-    final today = DateTime(
+    DateTime currentDay = DateTime(
       DateTime.now().year,
       DateTime.now().month,
       DateTime.now().day,
     );
 
     int streak = 0;
-    DateTime currentDay = today;
 
     while (uniqueDays.contains(currentDay)) {
       streak++;
+
       currentDay = currentDay.subtract(
         const Duration(days: 1),
       );
@@ -136,7 +127,29 @@ class ProductivityProvider extends ChangeNotifier {
         );
   }
 
-  void addTask(String title) {
+  Future<void> loadData() async {
+    _isLoading = true;
+    notifyListeners();
+
+    try {
+      final savedTasks = await _storageService.loadTasks();
+      final savedSessions =
+          await _storageService.loadCodingSessions();
+
+      _tasks
+        ..clear()
+        ..addAll(savedTasks);
+
+      _codingSessions
+        ..clear()
+        ..addAll(savedSessions);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> addTask(String title) async {
     final trimmedTitle = title.trim();
 
     if (trimmedTitle.isEmpty) {
@@ -153,9 +166,11 @@ class ProductivityProvider extends ChangeNotifier {
     _tasks.add(task);
 
     notifyListeners();
+
+    await _storageService.saveTasks(_tasks);
   }
 
-  void toggleTask(String id) {
+  Future<void> toggleTask(String id) async {
     final index = _tasks.indexWhere(
       (task) => task.id == id,
     );
@@ -174,21 +189,25 @@ class ProductivityProvider extends ChangeNotifier {
     );
 
     notifyListeners();
+
+    await _storageService.saveTasks(_tasks);
   }
 
-  void deleteTask(String id) {
+  Future<void> deleteTask(String id) async {
     _tasks.removeWhere(
       (task) => task.id == id,
     );
 
     notifyListeners();
+
+    await _storageService.saveTasks(_tasks);
   }
 
-  void addCodingSession({
+  Future<void> addCodingSession({
     required DateTime startTime,
     required DateTime endTime,
     required int durationMinutes,
-  }) {
+  }) async {
     final session = CodingSession(
       id: DateTime.now().microsecondsSinceEpoch.toString(),
       startTime: startTime,
@@ -199,5 +218,9 @@ class ProductivityProvider extends ChangeNotifier {
     _codingSessions.add(session);
 
     notifyListeners();
+
+    await _storageService.saveCodingSessions(
+      _codingSessions,
+    );
   }
 }
