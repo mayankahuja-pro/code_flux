@@ -24,24 +24,9 @@ Users can create daily tasks, start a focused coding session, track completed se
 
 ---
 
-## Screenshots
+ Screenshots
+<table> <tr> <td align="center"> <img src="https://github.com/user-attachments/assets/3111ca46-9d95-44f2-9f5b-9770f82312b2" alt="Dashboard" width="200"/> <br /> <b>Dashboard</b> </td> <td align="center"> <img src="https://github.com/user-attachments/assets/e0b6eeba-24f8-48d4-8cf7-9b5e24a93198" alt="Focus" width="200"/> <br /> <b>Focus</b> </td> <td align="center"> <img src="https://github.com/user-attachments/assets/08589bae-0813-4f9b-915c-caa27b7243c6" alt="App Overview" width="200"/> <br /> <b>App Overview</b> </td> <td align="center"> <img src="https://github.com/user-attachments/assets/0fdfece1-5632-4411-8351-476291df6daa" alt="Analytics" width="200"/> <br /> <b>Analytics</b> </td> </tr> </table>
 
-> Add your actual screenshots here after taking them from the Android emulator/device.
-
-| Dashboard      | Focus Timer    | Tasks          | Statistics     |
-| -------------- | -------------- | -------------- | -------------- |
-| Add screenshot | Add screenshot | Add screenshot | Add screenshot |
-
-Example:
-
-```markdown
-![Dashboard](screenshots/dashboard.png)
-![Focus Timer](screenshots/focus.png)
-![Tasks](screenshots/tasks.png)
-![Statistics](screenshots/statistics.png)
-```
-
----
 
 ## Key Features
 
