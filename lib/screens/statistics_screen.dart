@@ -60,15 +60,28 @@ class StatisticsScreen extends StatelessWidget {
             ),
 
             const SizedBox(height: 20),
+if (provider.codingSessions.isEmpty)
+  const Padding(
+    padding: EdgeInsets.all(32),
+    child: Center(
+      child: Text(
+        'Complete your first focus session '
+        'to see your statistics.',
+        textAlign: TextAlign.center,
+      ),
+    ),
+  )
+else
+  Card(
+    child: Padding(
+      padding: const EdgeInsets.all(16),
+      child: ProductivityChart(
+        dailyMinutes: dailyMinutes,
+      ),
+    ),
+  ),
 
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: ProductivityChart(
-                  dailyMinutes: dailyMinutes,
-                ),
-              ),
-            ),
+
 
             const SizedBox(height: 20),
 
